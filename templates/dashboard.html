@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Dashboard - Secretariat Desk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Dashboard</h1>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Zonal Obligations Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Zonal Obligations</h5>
+                <a href="{% url 'obligations:zonal_create' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Add New
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Balance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obligation in zonal_obligations %}
+                            <tr>
+                                <td>{{ obligation.get_category_display }}</td>
+                                <td>
+                                    {% if obligation.balance == 0 %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> Done
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock"></i> Pending
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if obligation.balance != 0 %}
+                                        <button class="btn btn-danger btn-sm" disabled>
+                                            ${{ obligation.balance }}
+                                        </button>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'obligations:zonal_update' obligation.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No zonal obligations recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- District Obligations Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">District Obligations</h5>
+                <a href="{% url 'obligations:district_create' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Add New
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>District</th>
+                                <th>Status</th>
+                                <th>Balance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obligation in district_obligations %}
+                            <tr>
+                                <td>{{ obligation.district_name }}</td>
+                                <td>
+                                    {% if obligation.balance == 0 %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> Done
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock"></i> Pending
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if obligation.balance != 0 %}
+                                        <button class="btn btn-danger btn-sm" disabled>
+                                            ${{ obligation.balance }}
+                                        </button>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'obligations:district_update' obligation.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No district obligations recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Freewill Offerings Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Freewill Offerings</h5>
+                <a href="{% url 'offerings:create' %}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> Add New
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for offering in offerings %}
+                            <tr>
+                                <td>{{ offering.date|date:"M d, Y" }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" disabled>
+                                        ${{ offering.amount }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="{% url 'offerings:update' offering.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center">No offerings recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Previous Week's Offering Card -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">Previous Week's Offering</h5>
+            </div>
+            <div class="card-body">
+                {% if previous_offering %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted mb-2">Date</h6>
+                        <p class="mb-0">{{ previous_offering.date|date:"M d, Y" }}</p>
+                    </div>
+                    <div>
+                        <h6 class="text-muted mb-2">Amount</h6>
+                        <button class="btn btn-success" disabled>
+                            ${{ previous_offering.amount }}
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <p class="text-center text-muted mb-0">No previous offering recorded.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
