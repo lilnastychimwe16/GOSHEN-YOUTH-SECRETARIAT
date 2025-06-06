@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Secretariat Desk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="mb-4">Welcome, {{ user.username }}!</h1>
+    </div>
+</div>
+
+<!-- Freewill Offerings Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Freewill Offerings</h3>
+            </div>
+            <div class="card-body">
+                {% if latest_offering %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-card p-3">
+                                <h4>Current Amount</h4>
+                                <button class="btn btn-success btn-lg w-100 mb-2" disabled>
+                                    ${{ latest_offering.amount }}
+                                </button>
+                                <small class="text-muted">Week of {{ latest_offering.week_start_date }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card p-3">
+                                <h4>Previous Week</h4>
+                                <button class="btn btn-success btn-lg w-100 mb-2" disabled>
+                                    ${{ previous_offering.amount|default:"0.00" }}
+                                </button>
+                                <small class="text-muted">Week of {{ previous_offering.week_start_date|default:"N/A" }}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card p-3">
+                                <h4>Last Modified</h4>
+                                <p class="stat-value">{{ latest_offering.updated_at|date:"M d, Y" }}</p>
+                                <small class="text-muted">By {{ latest_offering.created_by.username }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center">No offerings recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Zonal Obligations Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Zonal Obligations</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Current Figure</th>
+                                <th>Balance</th>
+                                <th>Projected Target</th>
+                                <th>Last Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obligation in zonal_obligations %}
+                            <tr>
+                                <td>{{ obligation.get_category_display }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" disabled>
+                                        ${{ obligation.current_figure }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" disabled>
+                                        ${{ obligation.balance }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" disabled>
+                                        ${{ obligation.projected_target }}
+                                    </button>
+                                </td>
+                                <td>{{ obligation.updated_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No zonal obligations recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- District Obligations Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">District Obligations</h3>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>District</th>
+                                <th>Current Figure</th>
+                                <th>Balance</th>
+                                <th>Projected Target</th>
+                                <th>Last Modified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obligation in district_obligations %}
+                            <tr>
+                                <td>{{ obligation.district_name }}</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm" disabled>
+                                        ${{ obligation.current_figure }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm" disabled>
+                                        ${{ obligation.balance }}
+                                    </button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" disabled>
+                                        ${{ obligation.projected_target }}
+                                    </button>
+                                </td>
+                                <td>{{ obligation.updated_at|date:"M d, Y" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center">No district obligations recorded yet.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

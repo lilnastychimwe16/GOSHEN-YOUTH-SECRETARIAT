@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Zonal Obligations - Secretariat Desk{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>Zonal Obligations</h1>
+        <a href="{% url 'obligations:zonal_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Zonal Obligation
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Current Figure</th>
+                        <th>Balance</th>
+                        <th>Projected Target</th>
+                        <th>Last Modified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for obligation in obligations %}
+                    <tr>
+                        <td>{{ obligation.get_category_display }}</td>
+                        <td>
+                            <button class="btn btn-success btn-sm" disabled>
+                                ${{ obligation.current_figure }}
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" disabled>
+                                ${{ obligation.balance }}
+                            </button>
+                        </td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" disabled>
+                                ${{ obligation.projected_target }}
+                            </button>
+                        </td>
+                        <td>{{ obligation.updated_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'obligations:zonal_update' obligation.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'obligations:zonal_delete' obligation.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">No zonal obligations recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 
