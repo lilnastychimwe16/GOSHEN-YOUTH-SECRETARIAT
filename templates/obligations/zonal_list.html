@@ -20,6 +20,7 @@
                 <thead>
                     <tr>
                         <th>Category</th>
+                        <th>Status</th>
                         <th>Current Figure</th>
                         <th>Balance</th>
                         <th>Projected Target</th>
@@ -32,19 +33,36 @@
                     <tr>
                         <td>{{ obligation.get_category_display }}</td>
                         <td>
-                            <button class="btn btn-success btn-sm" disabled>
-                                ${{ obligation.current_figure }}
-                            </button>
+                            {% if obligation.balance == 0 %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check"></i> Done
+                                </span>
+                            {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-clock"></i> Pending
+                                </span>
+                            {% endif %}
                         </td>
                         <td>
-                            <button class="btn btn-danger btn-sm" disabled>
-                                ${{ obligation.balance }}
-                            </button>
+                            {% if obligation.balance != 0 %}
+                                <button class="btn btn-success btn-sm" disabled>
+                                    ${{ obligation.current_figure }}
+                                </button>
+                            {% endif %}
                         </td>
                         <td>
-                            <button class="btn btn-primary btn-sm" disabled>
-                                ${{ obligation.projected_target }}
-                            </button>
+                            {% if obligation.balance != 0 %}
+                                <button class="btn btn-danger btn-sm" disabled>
+                                    ${{ obligation.balance }}
+                                </button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if obligation.balance != 0 %}
+                                <button class="btn btn-primary btn-sm" disabled>
+                                    ${{ obligation.projected_target }}
+                                </button>
+                            {% endif %}
                         </td>
                         <td>{{ obligation.updated_at|date:"M d, Y" }}</td>
                         <td>
@@ -58,7 +76,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center">No zonal obligations recorded yet.</td>
+                        <td colspan="7" class="text-center">No zonal obligations recorded yet.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
